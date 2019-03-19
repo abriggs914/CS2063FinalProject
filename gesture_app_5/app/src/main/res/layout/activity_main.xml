@@ -17,4 +17,43 @@ tools:context="com.example.abrig.gesture_app_5.MainActivity">
     android:layout_centerInParent="true"
     android:textSize="24sp"
     android:text="@string/gesture" />
+
+    <Button
+        android:id="@+id/select_Picture_Menu_Button"
+        android:layout_width="119dp"
+        android:layout_height="57dp"
+        android:layout_below="@+id/tvGesture"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="233dp"
+        android:layout_marginLeft="233dp"
+        android:layout_marginTop="87dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginRight="42dp"
+        android:layout_marginBottom="104dp"
+        android:onClick="startSecondIntent"
+        android:text="@string/select_Pic_Menu_Button" />
+
+    <Button
+        android:id="@+id/take_Picture_Menu_Button"
+        android:layout_width="119dp"
+        android:layout_height="57dp"
+        android:layout_below="@+id/tvGesture"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="222dp"
+        android:layout_marginRight="222dp"
+        android:layout_marginBottom="105dp"
+        android:onClick="startThirdIntent"
+        android:text="@string/select_TakePic_Menu_Button" />
+
 </RelativeLayout>

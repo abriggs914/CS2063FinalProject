@@ -1,10 +1,12 @@
 package com.example.abrig.gesture_app_5;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +23,16 @@ public class MainActivity extends AppCompatActivity {
         AndroidGestureDectector androidGestureDectector = new AndroidGestureDectector();
         myGestureDectector = new GestureDetector(MainActivity.this, androidGestureDectector);
 
+    }
+
+    public void startSecondIntent(View view) {
+        Intent intent = new Intent(MainActivity.this,Main2Activity.class);
+        startActivityForResult(intent,1);
+    }
+
+    public void startThirdIntent(View view) {
+        Intent intent = new Intent(MainActivity.this,Main3Activity.class);
+        startActivityForResult(intent,1);
     }
 
     class AndroidGestureDectector implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
