@@ -8,4 +8,6 @@
     <string name="select_TakePic_Menu_Button">TAKE PIC</string>
     <string name="take_picture">TAKE PICTURE</string>
     <string name="title_activity_main3">Take a Picture</string>
+    <string name="title_activity_main4">Apply a Filter</string>
+    <string name="apply_filter">APPLY FILTER</string>
 </resources>

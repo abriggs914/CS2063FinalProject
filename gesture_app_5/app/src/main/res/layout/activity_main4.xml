@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_background"
+    tools:context=".Main4Activity"
+    tools:layout_editor_absoluteY="25dp">
+
+    <ImageButton
+        android:id="@+id/back_to_main_menu_button_applyfilter"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:onClick="startFirstIntent"
+        android:src="@drawable/arrow_back_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="82dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/textView1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_to_main_menu_button_applyfilter">
+
+        <ImageButton
+            android:id="@+id/imageButton_canoe"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="205dp"
+            android:paddingRight="205dp"
+            app:srcCompat="@drawable/canoe_lake_small"
+            tools:layout_editor_absoluteX="177dp"
+            tools:layout_editor_absoluteY="314dp"/>
+
+        <ImageButton
+            android:id="@+id/imageButton2_dog"
+            android:layout_width="89dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/dog_small"
+            tools:layout_editor_absoluteX="177dp"
+            tools:layout_editor_absoluteY="314dp" />
+
+        <ImageButton
+            android:id="@+id/imageButton_ski_resort"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/ski_resort_small"
+            tools:layout_editor_absoluteX="177dp"
+            tools:layout_editor_absoluteY="314dp"/>
+
+        <ImageButton
+            android:id="@+id/imageButton_london"
+            android:layout_width="104dp"
+            android:layout_height="68dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/london_skyline_small"
+            tools:layout_editor_absoluteX="177dp"
+            tools:layout_editor_absoluteY="314dp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/targetimage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="79dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/thumb_background_color"
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/targetimage">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/thumbnails"
+            android:layout_width="34dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:clipToPadding="false"
+            tools:padding="4dp" />
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="0dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="18dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/targetimage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+</android.support.constraint.ConstraintLayout>

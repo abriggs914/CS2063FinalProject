@@ -35,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,1);
     }
 
+    public void startFourthIntent(View view) {
+        Intent intent = new Intent(MainActivity.this,Main4Activity.class);
+        startActivityForResult(intent,1);
+    }
+
     class AndroidGestureDectector implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
         @Override
