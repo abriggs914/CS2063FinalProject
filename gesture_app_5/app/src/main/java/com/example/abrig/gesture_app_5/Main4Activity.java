@@ -42,7 +42,7 @@ public class Main4Activity extends AppCompatActivity implements ThumbnailCallbac
 
     public ImageView targetImage;
     public ImageView currImage; // which ImageButton pic is selected (tiny versions)
-    public TextView textTargetUri;
+    public TextView tv;
     private RecyclerView thumbListView;
     private Activity activity;
     private FloatingActionButton fab;
@@ -57,6 +57,7 @@ public class Main4Activity extends AppCompatActivity implements ThumbnailCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
         targetImage = findViewById(R.id.targetimage);
+        tv = findViewById(R.id.textView1);
         currImage = targetImage;//getResources(R.drawable.dog);
         initUIWidgets();
         activity = this;
@@ -83,8 +84,9 @@ public class Main4Activity extends AppCompatActivity implements ThumbnailCallbac
             public void onClick(View view) {
                 Bitmap pic = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.dog), 640, 640, false);
                 Uri uri = getImageUri(getApplicationContext(), pic);
-//                adjustPicture(uri);
-                targetImage.setImageBitmap(pic);
+                tv.setText("DOG");
+                adjustPicture(uri, pic, true);
+//                targetImage.setImageBitmap(pic);
                 Snackbar.make(view, "Dog set.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -95,8 +97,9 @@ public class Main4Activity extends AppCompatActivity implements ThumbnailCallbac
             public void onClick(View view) {
                 Bitmap pic = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.london_skyline), 640, 640, false);
                 Uri uri = getImageUri(getApplicationContext(), pic);
-//                adjustPicture(uri);
-                targetImage.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.london_skyline), 640, 640, false));
+                tv.setText("LONDON");
+                adjustPicture(uri, pic,true);
+//                targetImage.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.london_skyline), 640, 640, false));
                 Snackbar.make(view, "London Skyline set.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -107,8 +110,9 @@ public class Main4Activity extends AppCompatActivity implements ThumbnailCallbac
             public void onClick(View view) {
                 Bitmap pic = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.canoe_lake), 640, 640, false);
                 Uri uri = getImageUri(getApplicationContext(), pic);
-//                adjustPicture(uri);
-                targetImage.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.canoe_lake), 640, 640, false));
+                tv.setText("CANOE");
+                adjustPicture(uri, pic, true);
+//                targetImage.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.canoe_lake), 640, 640, false));
                 Snackbar.make(view, "Canoe in Lake set.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -119,8 +123,9 @@ public class Main4Activity extends AppCompatActivity implements ThumbnailCallbac
             public void onClick(View view) {
                 Bitmap pic = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ski_resort), 640, 640, false);
                 Uri uri = getImageUri(getApplicationContext(), pic);
-//                adjustPicture(uri);
-                targetImage.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ski_resort), 640, 640, false));
+                tv.setText("SKI");
+                adjustPicture(uri, pic, true);
+//                targetImage.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ski_resort), 640, 640, false));
                 Snackbar.make(view, "Ski Resort set.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -199,48 +204,49 @@ public class Main4Activity extends AppCompatActivity implements ThumbnailCallbac
 
     }
 
-    public void adjustPicture(Uri targetUri){
+    public void adjustPicture(Uri targetUri, Bitmap pic, boolean isPreset){
         assert targetUri != null;
-        Bitmap bitmap;
+        Bitmap bitmap = pic;
         try {
+            if(!isPreset) {
             bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-            String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-            Cursor cur = getContentResolver().query(targetUri, orientationColumn, null, null, null);
-            int orientation = -1;
-            if (cur != null && cur.moveToFirst()) {
-                orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
-            }
-            TextView tv = findViewById(R.id.textView1);
-            tv.setText("Rotate: " + orientation);
-            while(orientation >= 0){
-                Matrix matrix = new Matrix();
-                if(orientation > 0) {
-                    matrix.postRotate(90);
+                String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+                Cursor cur = getContentResolver().query(targetUri, orientationColumn, null, null, null);
+                int orientation = -1;
+                if (cur != null && cur.moveToFirst()) {
+                    orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
                 }
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                orientation -= 90;
+                tv.setText("Rotate: " + orientation);
+                while (orientation >= 0) {
+                    Matrix matrix = new Matrix();
+                    if (orientation > 0) {
+                        matrix.postRotate(90);
+                    }
+                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                    orientation -= 90;
+                }
             }
 //                targetImage.setImageBitmap(bitmap);
 
-            myFilter = new Filter();
-            myFilter.addSubFilter(new BrightnessSubFilter(30));
-            myFilter.addSubFilter(new ContrastSubFilter(1.1f));
             if(bitmap != null) {
+                myFilter = new Filter();
+                myFilter.addSubFilter(new BrightnessSubFilter(30));
+                myFilter.addSubFilter(new ContrastSubFilter(1.1f));
                 Bitmap outputImage = myFilter.processFilter(bitmap);
                 targetImage.setImageBitmap(outputImage);
             }
             else{
                 targetImage.setImageBitmap(bitmap);
             }
+//            targetImage.setImageBitmap(bitmap);
         }
         catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
 //                e.printStackTrace();
 
         }
-        catch (Exception e){ // exception is thrown for some random pictures...
-            TextView tv = findViewById(R.id.textView1);
-            tv.setText("ERROR setting preset");
+        catch (ArithmeticException e){ // exception is thrown for some random pictures...
+            tv.setText("ERROR setting preset dog");
             targetImage.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getApplicationContext().getResources(), R.drawable.dog), 640, 640, false));
         }
     }
@@ -263,7 +269,8 @@ public class Main4Activity extends AppCompatActivity implements ThumbnailCallbac
 
         if (resultCode == RESULT_OK){
             Uri targetUri = data.getData();
-            adjustPicture(targetUri);
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            adjustPicture(targetUri, bitmap, false);
         }
     }
 

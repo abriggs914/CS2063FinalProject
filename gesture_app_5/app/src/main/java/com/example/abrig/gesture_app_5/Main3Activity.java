@@ -2,20 +2,13 @@ package com.example.abrig.gesture_app_5;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.io.FileNotFoundException;
 
 public class Main3Activity extends AppCompatActivity {
 
@@ -51,7 +44,12 @@ public class Main3Activity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        targetImage.setImageBitmap(bitmap);
+        try{
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            targetImage.setImageBitmap(bitmap);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
