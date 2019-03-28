@@ -19,10 +19,25 @@ public class FilterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_filter);
         gestureText = (TextView) findViewById(R.id.tvGesture);
         AndroidGestureDectector androidGestureDectector = new AndroidGestureDectector();
         myGestureDectector = new GestureDetector(FilterActivity.this, androidGestureDectector);
+    }
+
+    public void startTakePicIntent(View view) {
+        Intent intent = new Intent(FilterActivity.this, TakePicActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    public void startGalleryIntent(View view) {
+        Intent intent = new Intent(FilterActivity.this, GalleryActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    public void startFirstIntent(View view) {
+        Intent intent = new Intent(FilterActivity.this, MainActivity.class);
+        startActivityForResult(intent, 1);
     }
 
 //    public void startSecondIntent(View view) {

@@ -30,12 +30,12 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,1);
     }
 
-    public void startThirdIntent(View view) {
+    public void startFilterIntent(View view) {
         Intent intent = new Intent(MainActivity.this,FilterActivity.class);
         startActivityForResult(intent,1);
     }
 
-    public void startFourthIntent(View view) {
+    public void startGalleryIntent(View view) {
         Intent intent = new Intent(MainActivity.this,GalleryActivity.class);
         startActivityForResult(intent,1);
     }
