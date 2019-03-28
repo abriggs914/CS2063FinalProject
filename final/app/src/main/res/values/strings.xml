@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Filter By Gesture</string>
+    <string name="gesture">gesture</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="gallery">Gallery</string>
+    <string name="apply_filter">Apply Filter</string>
+</resources>
