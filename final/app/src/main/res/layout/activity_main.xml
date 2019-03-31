@@ -6,36 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/take_pic_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="62dp"
-        android:layout_marginLeft="62dp"
-        android:text="@string/take_picture"
+        android:layout_width="375dp"
+        android:layout_height="230dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         android:onClick="startTakePicIntent"
-        app:layout_constraintBaseline_toBaselineOf="@+id/gallery_button"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:src="@drawable/dog_small"
+        android:text="@string/take_picture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/gallery_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="133dp"
-        android:text="@string/library"
+        android:layout_width="0dp"
+        android:layout_height="192dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="268dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:onClick="startLibraryIntent"
-        app:layout_constraintStart_toEndOf="@+id/take_pic_button"
+        android:text="@string/library"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/filter_menu_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="71dp"
-        android:text="@string/apply_filter"
+        android:layout_width="367dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="228dp"
         android:onClick="startFilterIntent"
+        android:text="@string/apply_filter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/take_pic_button" />
