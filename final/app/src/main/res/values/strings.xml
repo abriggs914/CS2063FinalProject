@@ -6,4 +6,7 @@
     <string name="apply_filter">Apply Filter</string>
     <string name="take_pic">Take Pic</string>
     <string name="save_pic">SAVE PIC</string>
+    <string name="library">Library</string>
+    <string name="select_from_gallery">Select From Gallery</string>
+    <string name="library_caps">LIBRARY</string>
 </resources>

@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,1);
     }
 
-    public void startGalleryIntent(View view) {
-        Intent intent = new Intent(MainActivity.this,GalleryActivity.class);
+    public void startLibraryIntent(View view) {
+        Intent intent = new Intent(MainActivity.this,LibraryActivity.class);
         startActivityForResult(intent,1);
     }
 //

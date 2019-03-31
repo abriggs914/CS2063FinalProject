@@ -175,8 +175,8 @@ public class TakePicActivity extends AppCompatActivity {
         return null;
     }
 
-    public void startGalleryIntent(View view) {
-        Intent intent = new Intent(TakePicActivity.this, GalleryActivity.class);
+    public void startLibraryIntent(View view) {
+        Intent intent = new Intent(TakePicActivity.this, LibraryActivity.class);
         startActivityForResult(intent, 1);
     }
 
