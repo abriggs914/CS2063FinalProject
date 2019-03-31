@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 //    private TextView gestureText;
 //    private GestureDetector myGestureDectector;
 //    private int count = 0;
-
+//TEST PUSH
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
