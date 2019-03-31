@@ -2,6 +2,7 @@ package com.example.abrig.filterbygesture;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -28,6 +30,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zomato.photofilters.SampleFilters;
+import com.zomato.photofilters.geometry.Point;
+import com.zomato.photofilters.imageprocessors.Filter;
+import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
+import com.zomato.photofilters.imageprocessors.subfilters.ColorOverlaySubFilter;
+import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
+import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubFilter;
+import com.zomato.photofilters.imageprocessors.subfilters.ToneCurveSubFilter;
+import com.zomato.photofilters.imageprocessors.subfilters.VignetteSubFilter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -35,12 +47,20 @@ import java.util.Random;
 
 public class FilterActivity extends AppCompatActivity {
 
+    static{
+        System.loadLibrary("NativeImageProcessor");
+    }
+
     private TextView gestureText;
     private GestureDetector myGestureDectector;
     private int count = 0;
 
     private ImageView selectedImage;
     private Bitmap selectedImageBitmap;
+    private Bitmap startOverImageBitmap;
+    private String lst = "";
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +94,6 @@ public class FilterActivity extends AppCompatActivity {
                 if (cur != null && cur.moveToFirst()) {
                     orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
                 }
-//                tv.setText("Rotate: " + orientation);
                 while (orientation >= 0) {
                     Matrix matrix = new Matrix();
                     if (orientation > 0) {
@@ -84,67 +103,13 @@ public class FilterActivity extends AppCompatActivity {
                     orientation -= 90;
                 }
             }
-                selectedImage.setImageBitmap(bitmap);
-            selectedImageBitmap = bitmap;
+            selectedImage.setImageBitmap(bitmap);
+            Bitmap workingBitmap = Bitmap.createBitmap(bitmap);
+            selectedImageBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            startOverImageBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
         }
-        catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-//                e.printStackTrace();
-
-        }
-        catch (ArithmeticException e){ // exception is thrown for some random pictures...
-//            tv.setText("ERROR setting preset dog");
-//            selectedImage.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getApplicationContext().getResources(), R.drawable.dog), 640, 640, false));
-        }
-    }
-
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
-
-    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
-            final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        (Activity) context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    showDialog("External storage", context,
-                            Manifest.permission.READ_EXTERNAL_STORAGE);
-
-                } else {
-                    ActivityCompat
-                            .requestPermissions(
-                                    (Activity) context,
-                                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
-                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                }
-                return false;
-            } else {
-                return true;
-            }
-
-        } else {
-            return true;
-        }
-    }
-
-    public void showDialog(final String msg, final Context context,
-                           final String permission) {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-        alertBuilder.setCancelable(true);
-        alertBuilder.setTitle("Permission necessary");
-        alertBuilder.setMessage(msg + " permission is necessary");
-        alertBuilder.setPositiveButton(android.R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions((Activity) context,
-                                new String[] { permission },
-                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                    }
-                });
-        AlertDialog alert = alertBuilder.create();
-        alert.show();
+        catch (FileNotFoundException e) {}
+        catch (ArithmeticException e){}
     }
 
     @Override
@@ -226,37 +191,68 @@ public class FilterActivity extends AppCompatActivity {
         Toast.makeText(FilterActivity.this, "Picture saved successfully",Toast.LENGTH_LONG).show();
     }
 
+    public void startEditingOver(View view) {
+        if(startOverImageBitmap != null){
+            selectedImageBitmap = startOverImageBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            selectedImage.setImageBitmap(selectedImageBitmap);
+        }
+        else{
+            Toast.makeText(FilterActivity.this, "Select a picture first.", Toast.LENGTH_LONG).show();
+        }
+    }
+
     class AndroidGestureDectector implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+
+        public Filter myFilter = new Filter();
+
+        public void processImage(){
+            Toast.makeText(FilterActivity.this, "Processing Image", Toast.LENGTH_SHORT).show();
+            Bitmap currPic = myFilter.processFilter(selectedImageBitmap);
+            myFilter.clearSubFilters();
+            selectedImage.setImageBitmap(currPic);
+        }
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
             gestureText.setText("onSingleTapConfirmed");
-            updateNumTouches();
+            lst += "onSingleTapConfirmed,  ";
             Log.d("Gesture ", "onSingleTapConfirmed");
+            Random rnd = new Random();
+//            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            int dep = rnd.nextInt(100);
+            float r = rnd.nextFloat();
+            float b = rnd.nextFloat();
+            float g = rnd.nextFloat();
+            myFilter.addSubFilter(new ColorOverlaySubFilter(dep, r, g, b));
+            processImage();
             return false;
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent motionEvent) {
             gestureText.setText("onDoubleTap");
-            updateNumTouches();
+            lst += "onDoubleTap,  ";
             Log.d("Gesture ", "onDoubleTap");
+//            myFilter.addSubFilter(new BrightnessSubFilter(30));
+//            myFilter.addSubFilter(new ContrastSubFilter(1.1f));
+//            selectedImageBitmap = myFilter.processFilter(selectedImageBitmap);
             return false;
         }
 
         @Override
         public boolean onDoubleTapEvent(MotionEvent motionEvent) {
             gestureText.setText("onDoubleTapEvent");
-            updateNumTouches();
+            lst += "onDoubleTapEvent,  ";
             Log.d("Gesture ", "onDoubleTapEvent");
+            myFilter.addSubFilter(new VignetteSubFilter(FilterActivity.this, 100));
+            processImage();
             return false;
         }
 
         @Override
         public boolean onDown(MotionEvent motionEvent) {
             gestureText.setText("onDown");
-//            count--;
-            updateNumTouches();
+            lst += "onDown,  ";
             Log.d("Gesture ", "onDown");
             return false;
         }
@@ -264,9 +260,8 @@ public class FilterActivity extends AppCompatActivity {
         @Override
         public void onShowPress(MotionEvent motionEvent) {
             String line = "onShowPress";
-            count--;
-            updateNumTouches();
-            Toast.makeText(FilterActivity.this, line, Toast.LENGTH_LONG).show();
+            lst += line + ",  ";
+//            Toast.makeText(FilterActivity.this, line, Toast.LENGTH_LONG).show();
             gestureText.setText(line);
             Log.d("Gesture ", "onShowPress");
 
@@ -275,37 +270,38 @@ public class FilterActivity extends AppCompatActivity {
         @Override
         public boolean onSingleTapUp(MotionEvent motionEvent) {
             gestureText.setText("onSingleTapUp");
-            updateNumTouches();
-//            count++;
+            lst += "onSingleTapUp,  ";
             Log.d("Gesture ", "onSingleTapUp");
+//            myFilter.addSubFilter(new ColorOverlaySubFilter(100, .2f, .2f, .0f));
+//            selectedImageBitmap = myFilter.processFilter(selectedImageBitmap);
             return false;
         }
 
         @Override
         public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
             gestureText.setText("onScroll");
-            String line = "";
-//            count++;
-            updateNumTouches();
-            line = "";
+//            String line = "";
+////            count++;
+//            updateNumTouches();
+//            line = "";
             if (motionEvent.getX() < motionEvent1.getX()) {
-                line = "GESTURE: Left to Right Scroll: " + motionEvent.getX() + " - " + motionEvent1.getX() + "\nSPEED: " + String.valueOf(v) + " pixels/second";
-                Toast.makeText(FilterActivity.this,line,Toast.LENGTH_LONG).show();
+                String line = "GESTURE: Left to Right Scroll: " + motionEvent.getX() + " - " + motionEvent1.getX() + "\nSPEED: " + String.valueOf(v) + " pixels/second";
+//                Toast.makeText(FilterActivity.this,line,Toast.LENGTH_LONG).show();
                 Log.d("onScroll ", line);
             }
             if (motionEvent.getX() > motionEvent1.getX()) {
-                line = "GESTURE: Right to Left Scroll: " + motionEvent.getX() + " - " + motionEvent1.getX() + "\nSPEED: " + String.valueOf(v) + " pixels/second";
-                Toast.makeText(FilterActivity.this,line,Toast.LENGTH_LONG).show();
+                String line = "GESTURE: Right to Left Scroll: " + motionEvent.getX() + " - " + motionEvent1.getX() + "\nSPEED: " + String.valueOf(v) + " pixels/second";
+//                Toast.makeText(FilterActivity.this,line,Toast.LENGTH_LONG).show();
                 Log.d("onScroll ", line);
             }
             if (motionEvent.getY() < motionEvent1.getY()) {
-                line = "GESTURE: Up to Down Scroll: " + motionEvent.getX() + " - " + motionEvent1.getX() + "\nSPEED: " + String.valueOf(v) + " pixels/second";
-                Toast.makeText(FilterActivity.this,line,Toast.LENGTH_LONG).show();
+                String line = "GESTURE: Up to Down Scroll: " + motionEvent.getX() + " - " + motionEvent1.getX() + "\nSPEED: " + String.valueOf(v) + " pixels/second";
+//                Toast.makeText(FilterActivity.this,line,Toast.LENGTH_LONG).show();
                 Log.d("onScroll ", line);
             }
             if (motionEvent.getY() > motionEvent1.getY()) {
-                line = "GESTURE: Down to Up Scroll: " + motionEvent.getX() + " - " + motionEvent1.getX() + "\nSPEED: " + String.valueOf(v) + " pixels/second";
-                Toast.makeText(FilterActivity.this,line,Toast.LENGTH_LONG).show();
+                String line = "GESTURE: Down to Up Scroll: " + motionEvent.getX() + " - " + motionEvent1.getX() + "\nSPEED: " + String.valueOf(v) + " pixels/second";
+//                Toast.makeText(FilterActivity.this,line,Toast.LENGTH_LONG).show();
                 Log.d("onScroll ", line);
             }
             return false;
@@ -314,50 +310,96 @@ public class FilterActivity extends AppCompatActivity {
         @Override
         public void onLongPress(MotionEvent motionEvent) {
             gestureText.setText("onLongPress");
-//            count++;
-            updateNumTouches();
+            lst += "onLongPress,  ";
             Log.d("Gesture ", "onLongPress");
+            //Bitmap currPic = myFilter.processFilter(selectedImageBitmap);
+            Toast.makeText(FilterActivity.this, "RESETTING IMAGE", Toast.LENGTH_LONG).show();
+            selectedImageBitmap = startOverImageBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            selectedImage.setImageBitmap(startOverImageBitmap);
 
         }
 
         @Override
         public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-            gestureText.setText("onFling");
-            count++;
-            updateNumTouches();
-            if (motionEvent.getX() < motionEvent1.getX()) {
-                Log.d("Gesture ", "Left to Right Fling: " + motionEvent.getX() + " - " + motionEvent1.getX());
-                Log.d("Speed ", String.valueOf(v) + " pixels/second");
+//            gestureText.setText("onFling");
+            float diffX = Math.abs(motionEvent1.getX() - motionEvent.getX());
+            float diffY = Math.abs(motionEvent1.getY() - motionEvent.getY());
+            if(diffX > diffY) { // R -> L || L -> R
+                if (motionEvent.getX() < motionEvent1.getX()) {
+                    Log.d("Gesture ", "Left to Right Fling: " + motionEvent.getX() + " - " + motionEvent1.getX());
+                    //                tv.setText("Left to Right Fling: og - 1: " + motionEvent.getX() + " - " + motionEvent1.getX());
+                    Log.d("Speed ", String.valueOf(v) + " pixels/second");
+                    gestureText.setText("Applying: brightness filter 30");
+                    myFilter.addSubFilter(new BrightnessSubFilter(30));
+                    processImage();
+                }
+                if (motionEvent.getX() > motionEvent1.getX()) {
+                    Log.d("Gesture ", "Right to Left Fling: " + motionEvent.getX() + " - " + motionEvent1.getX());
+                    //                tv.setText("Right to Left Fling: og - 1: " + motionEvent.getX() + " - " + motionEvent1.getX());
+                    Log.d("Speed ", String.valueOf(v) + " pixels/second");
+                    gestureText.setText("Applying: BlueMess filter");
+
+                    Point[] redKnots;
+                    redKnots = new Point[8];
+                    redKnots[0] = new Point(0, 0);
+                    redKnots[1] = new Point(86, 34);
+                    redKnots[2] = new Point(117, 41);
+                    redKnots[3] = new Point(146, 80);
+                    redKnots[4] = new Point(170, 151);
+                    redKnots[5] = new Point(200, 214);
+                    redKnots[6] = new Point(225, 242);
+                    redKnots[7] = new Point(255, 255);
+
+                    myFilter.addSubFilter(new ToneCurveSubFilter(null, redKnots, null, null));
+                    myFilter.addSubFilter(new BrightnessSubFilter(30));
+                    myFilter.addSubFilter(new ContrastSubFilter(1f));
+                    processImage();
+                }
             }
-            if (motionEvent.getX() > motionEvent1.getX()) {
-                Log.d("Gesture ", "Right to Left Fling: " + motionEvent.getX() + " - " + motionEvent1.getX());
-                Log.d("Speed ", String.valueOf(v) + " pixels/second");
-            }
-            if (motionEvent.getY() < motionEvent1.getY()) {
-                Log.d("Gesture ", "Up to Down Fling: " + motionEvent.getY() + " - " + motionEvent1.getY());
-                Log.d("Speed ", String.valueOf(v1) + " pixels/second");
-            }
-            if (motionEvent.getY() > motionEvent1.getY()) {
-                Log.d("Gesture ", "Down to Up Fling: " + motionEvent.getY() + " - " + motionEvent1.getY());
-                Log.d("Speed ", String.valueOf(v1) + " pixels/second");
+            if(diffY > diffX) { // U -> D || D -> U
+                if (motionEvent.getY() < motionEvent1.getY()) {
+                    Log.d("Gesture ", "Up to Down Fling: " + motionEvent.getY() + " - " + motionEvent1.getY());
+                    //                tv.setText("Up to Down Fling: og - 1: " + motionEvent.getY() + " - " + motionEvent1.getY());
+                    Log.d("Speed ", String.valueOf(v1) + " pixels/second");
+                    gestureText.setText("Applying: contrast filter 1.2f");
+                    myFilter.addSubFilter(new ContrastSubFilter(1.2f));
+                    processImage();
+                }
+                if (motionEvent.getY() > motionEvent1.getY()) {
+                    Log.d("Gesture ", "Down to Up Fling: " + motionEvent.getY() + " - " + motionEvent1.getY());
+                    //                tv.setText("Down to Up Fling: og - 1: " + motionEvent.getY() + " - " + motionEvent1.getY());
+                    Log.d("Speed ", String.valueOf(v1) + " pixels/second");
+                    gestureText.setText("Applying: saturation filter 1.3f");
+                    myFilter.addSubFilter(new SaturationSubFilter(1.3f));
+                    processImage();
+                }
             }
             return false;
         }
     }
 
-    public void updateNumTouches(){
-        TextView fs = findViewById(R.id.fling_stats);
-        String line = "";
-        line += "Count: " + count;
-        fs.setText(line);
-    }
-
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(final MotionEvent event) {
 //        count++;
+        lst = "";
         if(selectedImageBitmap != null) {
+//            Runnable runnable = new Runnable() {
+//
+////                public MotionEvent event = event;
+//
+//                @Override
+//                public void run() {
+//
+//
+//                }
+//            };
+//            Thread mythread = new Thread(runnable);
+//            mythread.start();
             myGestureDectector.onTouchEvent(event);
         }
+//        else{
+//            Toast.makeText(FilterActivity.this, "Select a picture first", Toast.LENGTH_LONG).show();
+//        }
         return super.onTouchEvent(event);
     }
 }
