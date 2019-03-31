@@ -5,4 +5,5 @@
     <string name="gallery">Gallery</string>
     <string name="apply_filter">Apply Filter</string>
     <string name="take_pic">Take Pic</string>
+    <string name="save_pic">SAVE PIC</string>
 </resources>

@@ -14,45 +14,37 @@
 
     <ImageButton
         android:id="@+id/back_to_main_menu_button_fromgallery"
-        android:layout_width="0dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="13dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="54dp"
-        android:layout_marginRight="54dp"
-        android:layout_marginBottom="151dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginRight="26dp"
         android:onClick="startFirstIntent"
         android:src="@drawable/arrow_back_black_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/fling_stats"
         app:layout_constraintEnd_toStartOf="@+id/goToPicIntent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/goToPicIntent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="42dp"
-        android:layout_marginRight="42dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginRight="26dp"
         android:onClick="startTakePicIntent"
         android:text="@string/take_pic"
         app:layout_constraintEnd_toStartOf="@+id/goToGallery"
-        app:layout_constraintStart_toEndOf="@+id/back_to_main_menu_button_fromgallery"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/goToGallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:onClick="startGalleryIntent"
         android:text="@string/gallery"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/goToPicIntent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -60,12 +52,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="35dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/gesture"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/fling_stats"
-        app:layout_constraintEnd_toEndOf="@+id/fling_stats"
-        app:layout_constraintStart_toStartOf="@+id/fling_stats" />
+        app:layout_constraintEnd_toStartOf="@+id/fling_stats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/displayedImage" />
+
+    <ImageView
+        android:id="@+id/displayedImage"
+        android:layout_width="355dp"
+        android:layout_height="251dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gestureLibraryButton" />
 
     <!--<Button
         android:id="@+id/select_Picture_Menu_Button"
@@ -126,18 +135,63 @@
 
     <TextView
         android:id="@+id/fling_stats"
-        android:layout_width="214dp"
-        android:layout_height="0dp"
+        android:layout_width="162dp"
+        android:layout_height="71dp"
         android:layout_below="@+id/tvGesture"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="175dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/displayedImage" />
+
+    <Button
+        android:id="@+id/gestureLibraryButton"
+        android:layout_width="173dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="8dp"
+        android:text="Library"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back_to_main_menu_button_fromgallery" />
+
+    <Button
+        android:id="@+id/selectFromGalleryButton"
+        android:layout_width="173dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:text="Select From Gallery"
+        android:onClick="selectPictureFromGallery"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/gestureLibraryButton"
+        app:layout_constraintTop_toBottomOf="@+id/goToGallery" />
+
+    <Button
+        android:id="@+id/saveFilteredPictureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Save Pic"
+        android:onClick="saveEditedPicture"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fling_stats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvGesture" />
 
 </android.support.constraint.ConstraintLayout>
